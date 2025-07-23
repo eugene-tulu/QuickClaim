@@ -7,19 +7,33 @@ import { Dashboard } from "./components/Dashboard";
 import { Onboarding } from "./components/Onboarding";
 import { LandingPage } from "./components/LandingPage";
 import { AdminPanel } from "./components/AdminPanel";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import { useState } from "react";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-porcelain">
-      <Toaster />
-      <Authenticated>
-        <AuthenticatedApp />
-      </Authenticated>
-      <Unauthenticated>
-        <LandingPage />
-      </Unauthenticated>
-    </div>
+    <ThemeProvider>
+      <div className="min-h-screen">
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: 'var(--color-bg-secondary)',
+              color: 'var(--color-text)',
+              border: '1px solid var(--color-border)',
+              borderRadius: '12px',
+              boxShadow: 'var(--elevation-2)',
+            }
+          }}
+        />
+        <Authenticated>
+          <AuthenticatedApp />
+        </Authenticated>
+        <Unauthenticated>
+          <LandingPage />
+        </Unauthenticated>
+      </div>
+    </ThemeProvider>
   );
 }
 
