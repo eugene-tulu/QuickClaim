@@ -64,31 +64,36 @@ export function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-porcelain flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen bg-porcelain flex items-center justify-center p-6">
+      <div className="max-w-lg w-full">
         {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex justify-between text-sm text-gray-500 mb-2">
-            <span>Step {step} of 3</span>
+        <div className="mb-12">
+          <div className="flex justify-between text-sm text-gray-500 mb-4">
+            <span className="font-medium">Step {step} of 3</span>
             <span>{Math.round((step / 3) * 100)}% complete</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-1">
             <div 
-              className="bg-imperial-purple h-2 rounded-full transition-all duration-300"
+              className="bg-imperial-purple h-1 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${(step / 3) * 100}%` }}
             />
           </div>
         </div>
 
         {step === 1 && (
-          <div className="bg-white p-8 rounded-lg border border-gray-100">
-            <h2 className="text-2xl font-bold text-charcoal mb-6">
-              Tell us about yourself
-            </h2>
+          <div className="card-solid p-10 animate-in">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-charcoal mb-4">
+                Tell us about yourself
+              </h2>
+              <p className="text-gray-600 font-light">
+                We'll match you with the right benefits
+              </p>
+            </div>
             
-            <form onSubmit={handleProfileSubmit} className="space-y-6">
+            <form onSubmit={handleProfileSubmit} className="space-y-8">
               <div>
-                <label className="block text-sm font-medium text-charcoal mb-2">
+                <label className="block text-sm font-medium text-charcoal mb-3">
                   Full Name
                 </label>
                 <input
@@ -96,19 +101,20 @@ export function Onboarding() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-imperial-purple focus:ring-1 focus:ring-imperial-purple outline-none"
+                  className="input-field-boxed"
+                  placeholder="Enter your full name"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-charcoal mb-2">
+                <label className="block text-sm font-medium text-charcoal mb-3">
                   Region
                 </label>
                 <select
                   required
                   value={formData.region}
                   onChange={(e) => setFormData({ ...formData, region: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-imperial-purple focus:ring-1 focus:ring-imperial-purple outline-none"
+                  className="input-field-boxed"
                 >
                   <option value="">Select your region</option>
                   <option value="California">California</option>
@@ -120,14 +126,14 @@ export function Onboarding() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-charcoal mb-2">
+                <label className="block text-sm font-medium text-charcoal mb-3">
                   Work Type
                 </label>
                 <select
                   required
                   value={formData.workType}
                   onChange={(e) => setFormData({ ...formData, workType: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-imperial-purple focus:ring-1 focus:ring-imperial-purple outline-none"
+                  className="input-field-boxed"
                 >
                   <option value="">Select your work type</option>
                   <option value="full-time">Full-time</option>
@@ -141,7 +147,7 @@ export function Onboarding() {
 
               <button
                 type="submit"
-                className="w-full bg-imperial-purple text-white py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors"
+                className="btn-primary w-full text-lg py-5"
               >
                 Continue
               </button>
@@ -150,16 +156,17 @@ export function Onboarding() {
         )}
 
         {step === 2 && (
-          <div className="bg-white p-8 rounded-lg border border-gray-100">
-            <h2 className="text-2xl font-bold text-charcoal mb-6">
-              Upload ID Document
-            </h2>
-            
-            <p className="text-gray-600 mb-6">
-              Upload a photo of your government-issued ID to verify your identity.
-            </p>
+          <div className="card-solid p-10 animate-in">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-charcoal mb-4">
+                Upload ID Document
+              </h2>
+              <p className="text-gray-600 font-light">
+                We need to verify your identity for security
+              </p>
+            </div>
 
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <div className="border-2 border-dashed border-gray-200 rounded-2xl p-12 text-center hover:border-imperial-purple transition-colors">
               <input
                 type="file"
                 accept="image/*"
@@ -172,11 +179,13 @@ export function Onboarding() {
                 htmlFor="id-upload"
                 className={`cursor-pointer ${uploading ? 'opacity-50' : ''}`}
               >
-                <div className="text-4xl text-gray-400 mb-4">📄</div>
-                <p className="text-lg font-medium text-charcoal mb-2">
+                <div className="w-16 h-16 bg-imperial-purple/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <span className="text-3xl">📄</span>
+                </div>
+                <p className="text-xl font-medium text-charcoal mb-3">
                   {uploading ? "Uploading..." : "Click to upload ID"}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-gray-500">
                   PNG, JPG up to 10MB
                 </p>
               </label>
@@ -185,18 +194,20 @@ export function Onboarding() {
         )}
 
         {step === 3 && (
-          <div className="bg-white p-8 rounded-lg border border-gray-100 text-center">
-            <div className="text-6xl mb-6">🎉</div>
-            <h2 className="text-2xl font-bold text-charcoal mb-4">
+          <div className="card-solid p-10 text-center animate-in">
+            <div className="w-20 h-20 bg-imperial-purple/10 rounded-2xl flex items-center justify-center mx-auto mb-8">
+              <span className="text-4xl">🎉</span>
+            </div>
+            <h2 className="text-3xl font-bold text-charcoal mb-4">
               You're all set!
             </h2>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 mb-10 font-light text-lg">
               Your profile is complete. Let's find the benefits you're eligible for.
             </p>
             
             <button
               onClick={handleComplete}
-              className="w-full bg-imperial-purple text-white py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors"
+              className="btn-primary w-full text-lg py-5"
             >
               Enter Dashboard
             </button>

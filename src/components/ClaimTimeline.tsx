@@ -4,20 +4,21 @@ import { ClaimDetails } from "./ClaimDetails";
 
 interface ClaimTimelineProps {
   claims: Doc<"claims">[];
+  darkMode?: boolean;
 }
 
-export function ClaimTimeline({ claims }: ClaimTimelineProps) {
+export function ClaimTimeline({ claims, darkMode = false }: ClaimTimelineProps) {
   const [selectedClaim, setSelectedClaim] = useState<Doc<"claims"> | null>(null);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "draft": return "bg-gray-100 text-gray-600";
-      case "submitted": return "bg-blue-100 text-trust-blue";
-      case "under_review": return "bg-yellow-100 text-yellow-700";
-      case "approved": return "bg-green-100 text-green-700";
-      case "rejected": return "bg-red-100 text-red-700";
-      case "paid": return "bg-imperial-purple bg-opacity-10 text-imperial-purple";
-      default: return "bg-gray-100 text-gray-600";
+      case "draft": return "status-draft";
+      case "submitted": return "status-submitted";
+      case "under_review": return "status-processing";
+      case "approved": return "status-approved";
+      case "rejected": return "status-rejected";
+      case "paid": return "status-paid";
+      default: return "status-draft";
     }
   };
 
@@ -37,70 +38,96 @@ export function ClaimTimeline({ claims }: ClaimTimelineProps) {
     return (
       <ClaimDetails 
         claim={selectedClaim} 
-        onBack={() => setSelectedClaim(null)} 
+        onBack={() => setSelectedClaim(null)}
+        darkMode={darkMode}
       />
     );
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-100 p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-charcoal">Your Claims</h2>
-        <span className="text-sm text-gray-500">
-          {claims.length} total claims
-        </span>
-      </div>
-
-      {claims.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="text-4xl mb-4">📋</div>
-          <h3 className="text-lg font-medium text-charcoal mb-2">
-            No claims yet
-          </h3>
-          <p className="text-gray-600">
-            Start by exploring eligible benefits in the sidebar.
-          </p>
+    <div className={`rounded-2xl border transition-colors duration-300 ${
+      darkMode 
+        ? 'bg-gray-900/50 border-gray-800' 
+        : 'bg-white border-gray-100'
+    }`}>
+      <div className="p-8">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-charcoal'}`}>
+            Your Claims
+          </h2>
+          <span className={`text-sm px-3 py-1 rounded-full ${
+            darkMode ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-500'
+          }`}>
+            {claims.length} total
+          </span>
         </div>
-      ) : (
-        <div className="space-y-4">
-          {claims.map((claim) => (
-            <div
-              key={claim._id}
-              onClick={() => setSelectedClaim(claim)}
-              className="border border-gray-200 rounded-lg p-4 hover:border-imperial-purple cursor-pointer transition-colors"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-3">
-                  <span className="text-2xl">{getStatusIcon(claim.status)}</span>
-                  <div>
-                    <h3 className="font-medium text-charcoal capitalize">
-                      {claim.type.replace('_', ' ')} Claim
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Created {new Date(claim._creationTime).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(claim.status)}`}>
-                  {claim.status.replace('_', ' ')}
-                </span>
-              </div>
 
-              {claim.amount && (
-                <div className="text-lg font-semibold text-imperial-purple">
-                  ${claim.amount.toLocaleString()}
-                </div>
-              )}
-
-              {claim.description && (
-                <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-                  {claim.description}
-                </p>
-              )}
+        {claims.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="w-20 h-20 bg-imperial-purple/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <span className="text-4xl">📋</span>
             </div>
-          ))}
-        </div>
-      )}
+            <h3 className={`text-xl font-semibold mb-3 ${darkMode ? 'text-white' : 'text-charcoal'}`}>
+              No claims yet
+            </h3>
+            <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} font-light`}>
+              Start by exploring eligible benefits in the sidebar.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {claims.map((claim, index) => (
+              <div
+                key={claim._id}
+                onClick={() => setSelectedClaim(claim)}
+                className={`border rounded-xl p-6 cursor-pointer transition-all duration-200 hover:shadow-lg animate-in ${
+                  darkMode 
+                    ? 'border-gray-800 hover:border-imperial-purple bg-gray-900/30' 
+                    : 'border-gray-200 hover:border-imperial-purple bg-white'
+                }`}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-imperial-purple/10 rounded-xl flex items-center justify-center">
+                      <span className="text-2xl">{getStatusIcon(claim.status)}</span>
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold capitalize ${darkMode ? 'text-white' : 'text-charcoal'}`}>
+                        {claim.type.replace('_', ' ')} Claim
+                      </h3>
+                      <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        Created {new Date(claim._creationTime).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  <span className={`status-badge ${getStatusColor(claim.status)}`}>
+                    {claim.status.replace('_', ' ')}
+                  </span>
+                </div>
+
+                {claim.amount && (
+                  <div className="text-2xl font-bold text-imperial-purple mb-2">
+                    ${claim.amount.toLocaleString()}
+                  </div>
+                )}
+
+                {claim.description && (
+                  <p className={`text-sm line-clamp-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    {claim.description}
+                  </p>
+                )}
+
+                <div className="flex justify-end mt-4">
+                  <span className="text-imperial-purple text-sm font-medium">
+                    View details →
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

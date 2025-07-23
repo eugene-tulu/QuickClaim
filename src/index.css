@@ -2,42 +2,118 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 :root {
-  --color-light: #ffffff;
-  --color-dark: #171717;
+  --color-light: #FAFAFA;
+  --color-dark: #1A1A1A;
 }
 
-.accent-text {
-  @apply text-slate-600;
+* {
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family:
-    "Inter Variable",
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    "Noto Sans",
-    sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji";
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   color: var(--color-dark);
   background: var(--color-light);
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* only use this to update the style of the auth input fields. use a different class for all other input fields */
+/* Premium button styles */
+.btn-primary {
+  @apply inline-flex items-center justify-center px-8 py-4 bg-imperial-purple text-white font-medium rounded-xl transition-all duration-200 hover:bg-primary-hover hover:shadow-lg hover:shadow-imperial-purple/25 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-imperial-purple focus:ring-offset-2;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center px-8 py-4 bg-white text-charcoal font-medium rounded-xl border border-mist-gray transition-all duration-200 hover:border-imperial-purple hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-imperial-purple focus:ring-offset-2;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center px-6 py-3 text-charcoal font-medium rounded-xl transition-all duration-200 hover:bg-porcelain active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-imperial-purple focus:ring-offset-2;
+}
+
+/* Premium input styles */
+.input-field {
+  @apply w-full px-0 py-4 bg-transparent border-0 border-b-2 border-mist-gray text-charcoal placeholder-gray-400 focus:border-imperial-purple focus:outline-none transition-colors duration-200 text-lg;
+}
+
+.input-field-boxed {
+  @apply w-full px-6 py-4 bg-white border border-mist-gray rounded-xl text-charcoal placeholder-gray-400 focus:border-imperial-purple focus:ring-1 focus:ring-imperial-purple focus:outline-none transition-all duration-200;
+}
+
+/* Card styles with glassmorphism */
+.card {
+  @apply bg-white/80 backdrop-blur-sm border border-white/20 rounded-2xl shadow-sm hover:shadow-lg hover:shadow-black/5 transition-all duration-300;
+}
+
+.card-solid {
+  @apply bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg hover:shadow-black/5 transition-all duration-300;
+}
+
+/* Status badges */
+.status-badge {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+}
+
+.status-draft {
+  @apply bg-gray-100 text-gray-700;
+}
+
+.status-submitted {
+  @apply bg-blue-50 text-trust-blue;
+}
+
+.status-processing {
+  @apply bg-yellow-50 text-yellow-700;
+}
+
+.status-approved {
+  @apply bg-green-50 text-green-700;
+}
+
+.status-rejected {
+  @apply bg-red-50 text-red-700;
+}
+
+.status-paid {
+  @apply bg-imperial-purple/10 text-imperial-purple;
+}
+
+/* Animation utilities */
+.animate-in {
+  animation: slideUp 0.6s ease-out;
+}
+
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+
+/* Grid utilities */
+.grid-auto-fit {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Scroll utilities */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+/* Auth form styles */
 .auth-input-field {
-  @apply w-full px-4 py-3 rounded-container bg-white border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow shadow-sm hover:shadow;
+  @apply input-field-boxed;
 }
 
-/* only use this to update the style of the auth buttons. use the button class for all other buttons */
 .auth-button {
-  @apply w-full px-4 py-3 rounded bg-primary text-white font-semibold hover:bg-primary-hover transition-colors shadow-sm hover:shadow disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply btn-primary w-full;
 }
