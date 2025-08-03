@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { query, mutation, action } from "./_generated/server";
+import { query, mutation } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { internal } from "./_generated/api";
 
@@ -93,10 +93,10 @@ export const submitClaim = mutation({
       submittedAt: Date.now(),
     });
 
-    // Schedule email notification (disabled for now)
-    // await ctx.scheduler.runAfter(0, internal.emails.sendClaimSubmittedEmail, {
-    //   claimId: args.claimId,
-    // });
+    // Schedule email notification
+    await ctx.scheduler.runAfter(0, internal.emails.sendClaimSubmittedEmail, {
+      claimId: args.claimId,
+    });
   },
 });
 
@@ -160,9 +160,9 @@ export const updateClaimStatus = mutation({
 
     await ctx.db.patch(args.claimId, updates);
 
-    // Schedule email notification for status updates (disabled for now)
-    // await ctx.scheduler.runAfter(0, internal.emails.sendClaimStatusEmail, {
-    //   claimId: args.claimId,
-    // });
+    // Schedule email notification for status updates
+    await ctx.scheduler.runAfter(0, internal.emails.sendClaimStatusEmail, {
+      claimId: args.claimId,
+    });
   },
 });

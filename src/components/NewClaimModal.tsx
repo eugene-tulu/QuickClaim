@@ -7,10 +7,9 @@ import { toast } from "sonner";
 interface NewClaimModalProps {
   benefit: Doc<"benefits">;
   onClose: () => void;
-  darkMode?: boolean;
 }
 
-export function NewClaimModal({ benefit, onClose, darkMode = false }: NewClaimModalProps) {
+export function NewClaimModal({ benefit, onClose }: NewClaimModalProps) {
   const [step, setStep] = useState(1);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -70,7 +69,7 @@ export function NewClaimModal({ benefit, onClose, darkMode = false }: NewClaimMo
     
     try {
       await submitClaim({ claimId: claimId as any });
-      toast.success("Claim submitted successfully!");
+      toast.success("Claim submitted successfully! Check your email for confirmation.");
       onClose();
     } catch (error) {
       toast.error("Failed to submit claim");
@@ -78,70 +77,60 @@ export function NewClaimModal({ benefit, onClose, darkMode = false }: NewClaimMo
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className={`rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto animate-scale-in ${
-        darkMode ? 'bg-gray-900 border border-gray-800' : 'bg-white'
-      }`}>
-        <div className="p-8">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-charcoal'}`}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold text-charcoal">
               Apply for {benefit.name}
             </h2>
             <button
               onClick={onClose}
-              className={`text-2xl ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}
+              className="text-gray-400 hover:text-gray-600"
             >
-              ×
+              ✕
             </button>
           </div>
 
           {step === 1 && (
             <div>
-              <div className={`rounded-2xl p-6 mb-8 ${
-                darkMode ? 'bg-imperial-purple/10' : 'bg-imperial-purple/5'
-              }`}>
-                <h3 className={`font-semibold mb-3 ${darkMode ? 'text-white' : 'text-charcoal'}`}>
+              <div className="bg-imperial-purple bg-opacity-5 rounded-lg p-4 mb-6">
+                <h3 className="font-semibold text-charcoal mb-2">
                   {benefit.name}
                 </h3>
-                <p className="text-3xl font-bold text-imperial-purple mb-3">
+                <p className="text-2xl font-bold text-imperial-purple mb-2">
                   Up to ${benefit.maxAmount.toLocaleString()}
                 </p>
-                <p className={`text-sm mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <p className="text-sm text-gray-600 mb-3">
                   {benefit.description}
                 </p>
-                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                <p className="text-xs text-gray-500">
                   Processing time: {benefit.processingTime}
                 </p>
               </div>
 
-              <div className="mb-8">
-                <label className={`block text-sm font-medium mb-3 ${darkMode ? 'text-white' : 'text-charcoal'}`}>
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-charcoal mb-2">
                   Tell us about your situation (optional)
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe your circumstances..."
-                  className={`w-full px-4 py-4 rounded-xl border transition-colors ${
-                    darkMode 
-                      ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-imperial-purple' 
-                      : 'bg-white border-gray-200 text-charcoal placeholder-gray-400 focus:border-imperial-purple'
-                  } focus:ring-1 focus:ring-imperial-purple outline-none`}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-imperial-purple focus:ring-1 focus:ring-imperial-purple outline-none"
                   rows={4}
                 />
               </div>
 
-              <div className="mb-8">
-                <h4 className={`font-medium mb-4 ${darkMode ? 'text-white' : 'text-charcoal'}`}>
+              <div className="mb-6">
+                <h4 className="font-medium text-charcoal mb-3">
                   Required Documents:
                 </h4>
-                <ul className="space-y-3">
+                <ul className="space-y-2">
                   {benefit.requiredDocuments.map((doc, index) => (
-                    <li key={index} className="flex items-center text-sm">
-                      <span className="w-2 h-2 bg-imperial-purple rounded-full mr-4 flex-shrink-0" />
-                      <span className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
-                        {doc}
-                      </span>
+                    <li key={index} className="flex items-center text-sm text-gray-600">
+                      <span className="w-2 h-2 bg-imperial-purple rounded-full mr-3" />
+                      {doc}
                     </li>
                   ))}
                 </ul>
@@ -149,7 +138,7 @@ export function NewClaimModal({ benefit, onClose, darkMode = false }: NewClaimMo
 
               <button
                 onClick={handleCreateClaim}
-                className="btn-primary w-full text-lg py-4"
+                className="w-full bg-imperial-purple text-white py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors"
               >
                 Start Application
               </button>
@@ -158,19 +147,15 @@ export function NewClaimModal({ benefit, onClose, darkMode = false }: NewClaimMo
 
           {step === 2 && (
             <div>
-              <h3 className={`text-xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-charcoal'}`}>
+              <h3 className="text-lg font-semibold text-charcoal mb-4">
                 Upload Documents
               </h3>
               
-              <p className={`mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <p className="text-gray-600 mb-6">
                 Upload the required documents for your {benefit.name} claim.
               </p>
 
-              <div className={`border-2 border-dashed rounded-2xl p-8 text-center mb-8 transition-colors ${
-                darkMode 
-                  ? 'border-gray-700 hover:border-imperial-purple' 
-                  : 'border-gray-300 hover:border-imperial-purple'
-              }`}>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center mb-6">
                 <input
                   type="file"
                   accept="image/*,.pdf"
@@ -183,28 +168,26 @@ export function NewClaimModal({ benefit, onClose, darkMode = false }: NewClaimMo
                   htmlFor="doc-upload"
                   className={`cursor-pointer ${uploading ? 'opacity-50' : ''}`}
                 >
-                  <div className="w-16 h-16 bg-imperial-purple/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <span className="text-3xl">📄</span>
-                  </div>
-                  <p className={`text-lg font-medium mb-2 ${darkMode ? 'text-white' : 'text-charcoal'}`}>
+                  <div className="text-3xl text-gray-400 mb-3">📄</div>
+                  <p className="font-medium text-charcoal mb-2">
                     {uploading ? "Uploading..." : "Click to upload documents"}
                   </p>
-                  <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <p className="text-sm text-gray-500">
                     PNG, JPG, PDF up to 10MB
                   </p>
                 </label>
               </div>
 
-              <div className="flex space-x-4">
+              <div className="flex space-x-3">
                 <button
                   onClick={() => setStep(1)}
-                  className="btn-secondary flex-1"
+                  className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleSubmitClaim}
-                  className="btn-primary flex-1"
+                  className="flex-1 bg-imperial-purple text-white py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors"
                 >
                   Submit Claim
                 </button>

@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { internal } from "./_generated/api";
 
 export const getCurrentUser = query({
   args: {},
@@ -52,6 +53,36 @@ export const completeOnboarding = mutation({
 
     await ctx.db.patch(userId, {
       onboardingComplete: true,
+      emailPreferences: {
+        claimUpdates: true,
+        marketing: true,
+        reminders: true,
+      },
+    });
+
+    // Send welcome email after onboarding completion
+    await ctx.scheduler.runAfter(0, internal.emails.sendWelcomeEmail, {
+      userId,
+    });
+  },
+});
+
+export const updateEmailPreferences = mutation({
+  args: {
+    claimUpdates: v.boolean(),
+    marketing: v.boolean(),
+    reminders: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    await ctx.db.patch(userId, {
+      emailPreferences: {
+        claimUpdates: args.claimUpdates,
+        marketing: args.marketing,
+        reminders: args.reminders,
+      },
     });
   },
 });

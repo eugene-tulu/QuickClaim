@@ -10,6 +10,11 @@ const applicationTables = {
     workType: v.optional(v.string()),
     idDocUrl: v.optional(v.id("_storage")),
     onboardingComplete: v.optional(v.boolean()),
+    emailPreferences: v.optional(v.object({
+      claimUpdates: v.boolean(),
+      marketing: v.boolean(),
+      reminders: v.boolean(),
+    })),
   }).index("by_email", ["email"]),
 
   claims: defineTable({
@@ -50,6 +55,17 @@ const applicationTables = {
   })
     .index("by_type", ["type"])
     .index("by_region", ["eligibleRegions"]),
+
+  emailLogs: defineTable({
+    type: v.string(), // "welcome", "claim_submitted", "claim_status_update", "test"
+    recipient: v.string(),
+    status: v.union(v.literal("sent"), v.literal("failed")),
+    error: v.optional(v.string()),
+    messageId: v.optional(v.string()),
+  })
+    .index("by_recipient", ["recipient"])
+    .index("by_type", ["type"])
+    .index("by_status", ["status"]),
 };
 
 export default defineSchema({
