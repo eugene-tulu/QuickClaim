@@ -15,7 +15,7 @@ export const sendClaimSubmittedEmail = internalAction({
     try {
       // Use Convex Resend proxy for demo
       const { Resend } = await import("resend");
-      const resend = new Resend(process.env.RESEND_API_KEY);
+      const resend = new Resend(process.env.RESEND_API_KEY!);
 
       const { data, error } = await resend.emails.send({
         from: "QuickClaim <noreply@quickclaim.app>",
@@ -99,7 +99,7 @@ export const sendClaimStatusEmail = internalAction({
 
     try {
       const { Resend } = await import("resend");
-      const resend = new Resend(process.env.RESEND_API_KEY);
+      const resend = new Resend(process.env.RESEND_API_KEY!);
 
       const statusMessages = {
         approved: {
@@ -221,7 +221,7 @@ export const sendWelcomeEmail = internalAction({
 
     try {
       const { Resend } = await import("resend");
-      const resend = new Resend(process.env.RESEND_API_KEY);
+      const resend = new Resend(process.env.RESEND_API_KEY!);
 
       const { data, error } = await resend.emails.send({
         from: "QuickClaim <noreply@quickclaim.app>",
@@ -302,7 +302,7 @@ export const sendTestEmail = action({
   handler: async (ctx) => {
     try {
       const { Resend } = await import("resend");
-      const resend = new Resend(process.env.RESEND_API_KEY);
+      const resend = new Resend(process.env.RESEND_API_KEY!);
 
       const { data, error } = await resend.emails.send({
         from: "QuickClaim <noreply@quickclaim.app>",
